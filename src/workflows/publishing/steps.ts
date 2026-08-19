@@ -3,6 +3,7 @@ import { archiveEventMetadata } from "@/lib/integrations/google-drive";
 import { publishGoogleBusinessEvent } from "@/lib/integrations/google-business";
 import { createInstagramContainer, publishFacebookPost, publishInstagramContainer } from "@/lib/integrations/meta";
 import { IntegrationResponseError } from "@/lib/integrations/shared";
+import { getPublicAppUrl } from "@/lib/env";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import type { PublishDestination, PublishEventPayload } from "@/workflows/publishing/types";
 
@@ -20,7 +21,7 @@ export async function publishDestinationStep(payload: PublishEventPayload, desti
   if (record.status === "succeeded") return { destination, status: "succeeded" as const, externalId: record.external_id };
   await admin.from("publishing_destinations").update({ status: "processing", attempt_count: record.attempt_count + 1, last_attempted_at: new Date().toISOString(), last_error_code: null, last_error_message: null }).eq("id", record.id);
 
-  const origin = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+  const origin = getPublicAppUrl();
   const eventUrl = `${origin}/e/${payload.event.slug}`;
   let result: { id: string; url?: string };
   try {

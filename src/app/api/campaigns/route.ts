@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { start } from "workflow/api";
 import { z } from "zod";
+import { getPublicAppUrl } from "@/lib/env";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { campaignScheduleWorkflow } from "@/workflows/campaigns";
 import type {
@@ -152,7 +153,7 @@ export async function POST(request: Request) {
       { error: "The campaign timeline couldn’t be scheduled." },
       { status: 500 },
     );
-  const origin = process.env.NEXT_PUBLIC_APP_URL ?? new URL(request.url).origin;
+  const origin = getPublicAppUrl(new URL(request.url).origin);
   const posts: ScheduledCampaignPost[] = rows.map((row, index) => {
     const source = enabledPosts[index];
     return {

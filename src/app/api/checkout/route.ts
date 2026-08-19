@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 import Stripe from "stripe";
 import { z } from "zod";
+import { getPublicAppUrl } from "@/lib/env";
 import { sendTicketConfirmation } from "@/lib/integrations/resend";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 
@@ -240,8 +241,7 @@ export async function POST(request: Request) {
 
   const stripe = new Stripe(secretKey);
   try {
-    const origin =
-      process.env.NEXT_PUBLIC_APP_URL ?? new URL(request.url).origin;
+    const origin = getPublicAppUrl(new URL(request.url).origin);
     const session = await stripe.checkout.sessions.create(
       {
         mode: "payment",

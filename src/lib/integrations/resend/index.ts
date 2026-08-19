@@ -1,4 +1,5 @@
 import { Resend } from "resend";
+import { getPublicAppUrl } from "@/lib/env";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 
 export async function sendTicketConfirmation(orderId: string) {
@@ -16,7 +17,7 @@ export async function sendTicketConfirmation(orderId: string) {
       admin.from("tickets").select("id", { count: "exact", head: true }).eq("order_id", orderId),
     ]);
     if (!customer?.email || !event) return { status: "skipped" as const };
-    const origin = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+    const origin = getPublicAppUrl();
     const walletUrl = `${origin}/tickets/${order.secure_order_token}`;
     const eventDate = new Intl.DateTimeFormat("en-US", { dateStyle: "full", timeStyle: "short", timeZone: "America/Chicago" }).format(new Date(event.starts_at));
     const resend = new Resend(apiKey);

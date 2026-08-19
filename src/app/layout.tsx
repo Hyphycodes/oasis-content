@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { DM_Sans, DM_Serif_Display } from "next/font/google";
+import { getPublicAppUrl } from "@/lib/env";
 import "./globals.css";
 
 const sans = DM_Sans({ subsets: ["latin"], variable: "--font-sans" });
@@ -10,9 +11,7 @@ const display = DM_Serif_Display({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(
-    process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000",
-  ),
+  metadataBase: new URL(getPublicAppUrl()),
   title: { default: "Oasis", template: "%s · Oasis" },
   description:
     "Events, tickets, content, and guest operations for Oasis Mexican Kitchen & Bar.",

@@ -17,6 +17,22 @@ const integrationGroups = {
   googleDrive: ["GOOGLE_DRIVE_ACCESS_TOKEN", "GOOGLE_DRIVE_FOLDER_ID"],
 } as const;
 
+const localAppUrl = "http://localhost:3000";
+
+export function getPublicAppUrl(fallback = localAppUrl) {
+  const configuredUrl = process.env.NEXT_PUBLIC_APP_URL?.trim();
+  if (!configuredUrl) return fallback;
+
+  try {
+    const url = new URL(configuredUrl);
+    return url.protocol === "http:" || url.protocol === "https:"
+      ? url.origin
+      : fallback;
+  } catch {
+    return fallback;
+  }
+}
+
 export function getEnvironmentReadiness() {
   const missingCore = coreProductionVariables.filter((key) => !process.env[key]);
   const integrations = Object.fromEntries(Object.entries(integrationGroups).map(([name, variables]) => [name, { configured: variables.every((key) => Boolean(process.env[key])), missing: variables.filter((key) => !process.env[key]) }]));
