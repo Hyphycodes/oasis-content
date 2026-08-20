@@ -1,7 +1,6 @@
 import {
   ArrowRight,
   CalendarDays,
-  ChevronDown,
   Clock3,
   MapPin,
   MenuSquare,
@@ -12,7 +11,7 @@ import {
 import Image from "next/image";
 import { TrackedLink } from "@/components/links/tracked-link";
 import { Logo } from "@/components/logo";
-import { getPublishedEvents } from "@/lib/data";
+import { getLocations, getPublishedEvents } from "@/lib/data";
 import { formatEventDate } from "@/lib/demo-data";
 
 export const metadata = {
@@ -23,7 +22,11 @@ export const metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function OasisLinksPage() {
-  const events = (await getPublishedEvents()).filter(
+  const [publishedEvents, locations] = await Promise.all([
+    getPublishedEvents(),
+    getLocations(),
+  ]);
+  const events = publishedEvents.filter(
     (event) => new Date(`${event.date}T23:59:59`) >= new Date(),
   );
   const primary = events[0];
@@ -31,7 +34,7 @@ export default async function OasisLinksPage() {
     return (
       <main className="links-page">
         <header className="links-header">
-          <Logo href="/" />
+          <Logo href="/events" />
           <p>Mexican kitchen · Bar · Cultura</p>
         </header>
         <section className="links-empty">
@@ -43,30 +46,32 @@ export default async function OasisLinksPage() {
         </section>
       </main>
     );
-  const reservationUrl =
-    process.env.NEXT_PUBLIC_RESERVATION_URL || "tel:+18175550148";
+  const primaryLocation =
+    locations.find((location) => location.id === primary.locationId) ??
+    locations[0];
+  const reservationUrl = process.env.NEXT_PUBLIC_RESERVATION_URL?.trim();
+  const directionsAddress = primary.address || primaryLocation?.address;
+  const phone = primaryLocation?.phone?.trim();
+  const phoneUrl = phone ? `tel:${phone.replace(/[^+\d]/g, "")}` : null;
   return (
     <main className="links-page">
       <div className="links-glow one" />
       <div className="links-glow two" />
       <header className="links-header">
-        <Logo href="/" />
-        <button>
-          <MapPin />
-          All locations
-          <ChevronDown />
-        </button>
+        <Logo href="/events" />
         <p>Mexican kitchen · Bar · Cultura</p>
       </header>
       <section className="links-evergreen">
-        <TrackedLink href={reservationUrl}>
-          <span>
-            <UtensilsCrossed />
-          </span>
-          <strong>Reserve a table</strong>
-          <small>Dinner, brunch, and celebrations</small>
-          <ArrowRight />
-        </TrackedLink>
+        {reservationUrl ? (
+          <TrackedLink href={reservationUrl}>
+            <span>
+              <UtensilsCrossed />
+            </span>
+            <strong>Reserve a table</strong>
+            <small>Dinner, brunch, and celebrations</small>
+            <ArrowRight />
+          </TrackedLink>
+        ) : null}
         <TrackedLink href="/menu">
           <span>
             <MenuSquare />
@@ -75,14 +80,18 @@ export default async function OasisLinksPage() {
           <small>Food, drinks, and seasonal specials</small>
           <ArrowRight />
         </TrackedLink>
-        <TrackedLink href="https://www.google.com/maps/search/?api=1&query=Oasis+Mexican+Kitchen+Fort+Worth">
-          <span>
-            <MapPin />
-          </span>
-          <strong>Directions</strong>
-          <small>Downtown or Southside</small>
-          <ArrowRight />
-        </TrackedLink>
+        {directionsAddress ? (
+          <TrackedLink
+            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(directionsAddress)}`}
+          >
+            <span>
+              <MapPin />
+            </span>
+            <strong>Directions</strong>
+            <small>{primary.locationName}</small>
+            <ArrowRight />
+          </TrackedLink>
+        ) : null}
       </section>
       <section className="links-events">
         <div className="links-section-heading">
@@ -153,18 +162,16 @@ export default async function OasisLinksPage() {
           ))}
         </div>
       </section>
-      <section className="links-bottom-actions">
-        <TrackedLink href="mailto:events@oasiskitchen.com">
-          <Sparkles />
-          Plan a private event
-        </TrackedLink>
-        <TrackedLink href="tel:+18175550148">
-          <Phone />
-          Call Oasis
-        </TrackedLink>
-      </section>
+      {phoneUrl ? (
+        <section className="links-bottom-actions">
+          <TrackedLink href={phoneUrl}>
+            <Phone />
+            Call Oasis
+          </TrackedLink>
+        </section>
+      ) : null}
       <footer className="links-footer">
-        <Logo href="/" />
+        <Logo href="/events" />
         <p>Good food. Good music. Good people.</p>
         <span>© 2026 Oasis</span>
       </footer>
