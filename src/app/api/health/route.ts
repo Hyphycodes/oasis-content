@@ -1,20 +1,40 @@
-import { hasSupabaseEnvironment } from "@/lib/supabase/server";
-import { getEnvironmentReadiness } from "@/lib/env";
+import { getEnvironmentReadiness, getWorkspaceMode } from "@/lib/env";
 
 export function GET() {
   const readiness = getEnvironmentReadiness();
+  const mode = getWorkspaceMode();
+  const databaseConfigured = mode === "connected";
   return Response.json({
-    ok: process.env.NODE_ENV !== "production" || readiness.readyForCoreProduction,
-    mode: hasSupabaseEnvironment() ? "connected" : "preview",
+    ok:
+      mode !== "configuration_required" &&
+      (process.env.NODE_ENV !== "production" ||
+        readiness.readyForCoreProduction),
+    mode,
     productionReadiness: readiness,
     services: {
-      database: hasSupabaseEnvironment() ? "configured" : "not_configured",
-      stripe: process.env.STRIPE_SECRET_KEY ? "configured" : "not_configured",
-      meta: process.env.META_ACCESS_TOKEN ? "configured" : "not_configured",
-      googleBusiness: process.env.GOOGLE_BUSINESS_ACCESS_TOKEN ? "configured" : "not_configured",
-      googleDrive: process.env.GOOGLE_DRIVE_ACCESS_TOKEN ? "configured" : "not_configured",
-      resend: process.env.RESEND_API_KEY ? "configured" : "not_configured",
-      openai: process.env.OPENAI_API_KEY ? "configured" : "not_configured",
+      database: databaseConfigured ? "configured" : "not_configured",
+      stripe:
+        process.env.STRIPE_SECRET_KEY &&
+        process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY &&
+        process.env.STRIPE_WEBHOOK_SECRET
+          ? "configured"
+          : "not_configured",
+      meta: readiness.integrations.meta.configured
+        ? "configured"
+        : "not_configured",
+      googleBusiness: readiness.integrations.googleBusiness.configured
+        ? "configured"
+        : "not_configured",
+      googleDrive: readiness.integrations.googleDrive.configured
+        ? "configured"
+        : "not_configured",
+      resend:
+        process.env.RESEND_API_KEY && process.env.RESEND_FROM_EMAIL
+          ? "configured"
+          : "not_configured",
+      openai: readiness.integrations.openai.configured
+        ? "configured"
+        : "not_configured",
     },
   });
 }
