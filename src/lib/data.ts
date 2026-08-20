@@ -1080,22 +1080,14 @@ export async function getSiteCopy() {
   const visitorMetadata = visitor?.metadata as
     { hours?: string; reservationUrl?: string } | null | undefined;
   return {
-    hero: hero?.title ?? "Good food. Good music. Good people.",
-    subtitle:
-      hero?.body ??
-      "Mexican kitchen, bar, and culture—made for getting together.",
-    heroImage:
-      heroMetadata?.heroImage ??
-      "https://images.unsplash.com/photo-1541544741938-0af808871cc0?auto=format&fit=crop&w=1800&q=88",
-    primaryCta: heroMetadata?.primaryCta ?? "See what’s on",
-    secondaryCta: heroMetadata?.secondaryCta ?? "Explore the menu",
-    eventsHeading:
-      content("homepage_events")?.title ??
-      "There’s always a reason to stay awhile.",
+    hero: hero?.title ?? "",
+    subtitle: hero?.body ?? "",
+    heroImage: heroMetadata?.heroImage ?? "",
+    primaryCta: heroMetadata?.primaryCta ?? "",
+    secondaryCta: heroMetadata?.secondaryCta ?? "",
+    eventsHeading: content("homepage_events")?.title ?? "",
     banner: content("promotional_banner")?.title ?? "",
-    privateEvents:
-      content("private_events")?.body ??
-      "Bring your celebration to Oasis. We’ll help shape the menu, music, and room around your people.",
+    privateEvents: content("private_events")?.body ?? "",
     phone: visitor?.title ?? "",
     address: visitor?.body ?? "",
     hours: visitorMetadata?.hours ?? "",
