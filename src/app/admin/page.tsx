@@ -5,12 +5,13 @@ import { AttentionCard, PageHeader, SectionHeader, StatusPill } from "@/componen
 import { EventCard } from "@/components/event-card";
 import { getContentItems, getCurrentProfile, getEvents } from "@/lib/data";
 import { currency, formatEventDate } from "@/lib/demo-data";
-import { hasSupabaseEnvironment } from "@/lib/supabase/server";
+import { getWorkspaceMode } from "@/lib/env";
 
 export default async function TodayPage() {
   const [allEvents, contentItems, profile] = await Promise.all([getEvents(), getContentItems(), getCurrentProfile()]);
   const events = allEvents.filter((event) => event.status !== "Draft");
   const tonight = events[0];
+  const isPreview = getWorkspaceMode() === "preview";
   const dateLabel = new Intl.DateTimeFormat("en-US", { weekday: "long", month: "long", day: "numeric", timeZone: "America/Chicago" }).format(new Date());
   return (
     <>
@@ -42,10 +43,14 @@ export default async function TodayPage() {
         </section>
         <aside>
           <SectionHeader title="Needs attention" description="Only the things that need a person." />
-          <div className="attention-list">{!hasSupabaseEnvironment() ? <>
-            <AttentionCard title="Instagram needs reconnecting" copy="Banda Bajo Las Estrellas is ready everywhere else." href="/admin/events/evt-banda" action="Reconnect" />
-            <AttentionCard title="Paint & Sip needs a flyer" copy="Add artwork before publishing on September 3." href="/admin/events/evt-paint" action="Add flyer" />
-          </> : <p className="empty-inline">Connection and publishing issues will appear here.</p>}</div>
+          <div className="attention-list">{isPreview ? (
+            <AttentionCard
+              title="Development preview only"
+              copy="These sample events are not Oasis business records. Saves, payments, emails, and provider publishing are simulated here."
+              href="/admin/settings"
+              action="Review setup"
+            />
+          ) : <p className="empty-inline">Connection and publishing issues will appear here.</p>}</div>
         </aside>
       </div>
 
