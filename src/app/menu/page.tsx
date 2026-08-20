@@ -1,106 +1,28 @@
-import { Leaf, MapPin, Sparkles } from "lucide-react";
+import { Leaf, MapPin } from "lucide-react";
 import Image from "next/image";
 import { Logo } from "@/components/logo";
 import { PublicHeader } from "@/components/public-header";
 import { getMenuStructure } from "@/lib/data";
-
-const previewMenu = [
-  {
-    name: "Para Compartir",
-    items: [
-      {
-        name: "Oasis Queso Fundido",
-        description: "Roasted poblano, chorizo, Oaxaca cheese, warm tortillas",
-        price: 15,
-        tags: ["GF available"],
-        image:
-          "https://images.unsplash.com/photo-1513456852971-30c0b8199d4d?auto=format&fit=crop&w=1000&q=84",
-      },
-      {
-        name: "Tableside Guacamole",
-        description: "Avocado, lime, serrano, cilantro, warm tostadas",
-        price: 13,
-        tags: ["Vegan", "GF"],
-      },
-      {
-        name: "Charred Elote",
-        description: "Chile-lime crema, cotija, smoked chile",
-        price: 9,
-        tags: ["Vegetarian", "GF"],
-      },
-    ],
-  },
-  {
-    name: "Tacos & Platos",
-    items: [
-      {
-        name: "Birria Tacos",
-        description:
-          "Slow-braised beef, Oaxaca cheese, onion, cilantro, consommé",
-        price: 18,
-        tags: [],
-        image:
-          "https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?auto=format&fit=crop&w=1000&q=84",
-      },
-      {
-        name: "Crispy Cauliflower Tacos",
-        description: "Adobo, avocado crema, cabbage, pickled onion",
-        price: 15,
-        tags: ["Vegetarian"],
-      },
-      {
-        name: "Pollo Asado",
-        description: "Achiote chicken, roasted salsa, rice, charro beans",
-        price: 19,
-        tags: ["GF"],
-      },
-    ],
-  },
-  {
-    name: "Cocktails",
-    items: [
-      {
-        name: "Oasis Margarita",
-        description: "Blanco tequila, orange, lime, agave, sea salt",
-        price: 13,
-        tags: [],
-      },
-      {
-        name: "Flor de Jamaica",
-        description: "Mezcal, hibiscus, citrus, chile",
-        price: 15,
-        tags: [],
-      },
-      {
-        name: "Cucumber Paloma",
-        description: "Tequila, grapefruit, cucumber, soda",
-        price: 14,
-        tags: [],
-      },
-    ],
-  },
-];
 
 export const metadata = { title: "Menu at Oasis" };
 export const dynamic = "force-dynamic";
 
 export default async function PublicMenuPage() {
   const structure = await getMenuStructure(true);
-  const menu = structure
-    ? structure.sections.map((section) => ({
-        name: section.name,
-        items: section.items
-          .filter((item) => item.available)
-          .map((item) => ({
-            name: item.name,
-            description: item.description,
-            price: item.price,
-            tags: item.dietaryTags,
-            image: undefined as string | undefined,
-          })),
-      }))
-    : previewMenu;
-  const locationName = structure?.locationName ?? "Oasis Downtown";
+  const menu =
+    structure?.sections.map((section) => ({
+      name: section.name,
+      items: section.items
+        .filter((item) => item.available)
+        .map((item) => ({
+          name: item.name,
+          description: item.description,
+          price: item.price,
+          tags: item.dietaryTags,
+        })),
+    })) ?? [];
+  const locationName = structure?.locationName || "Oasis";
+
   return (
     <main className="public-site public-menu">
       <PublicHeader />
@@ -141,23 +63,9 @@ export default async function PublicMenuPage() {
               <h2>{section.name}</h2>
               <div>
                 {section.items.map((item) => (
-                  <div
-                    className={item.image ? "featured-menu-item" : ""}
-                    key={item.name}
-                  >
-                    {item.image && (
-                      <Image
-                        src={item.image}
-                        alt={item.name}
-                        width={240}
-                        height={180}
-                      />
-                    )}
+                  <div key={item.name}>
                     <span>
-                      <strong>
-                        {item.name}
-                        {item.image && <Sparkles />}
-                      </strong>
+                      <strong>{item.name}</strong>
                       <small>{item.description}</small>
                       <em>
                         {item.tags.map((tag: string) => (
@@ -177,10 +85,10 @@ export default async function PublicMenuPage() {
         </section>
       ) : (
         <section className="public-events-empty">
-          <h3>The next menu is being prepared.</h3>
+          <h3>No published menu is available yet.</h3>
           <p>
-            Check back soon or contact Oasis for today’s food and drink
-            offerings.
+            Oasis staff can publish the current menu from Oasis Admin when it
+            is ready for guests.
           </p>
         </section>
       )}
@@ -195,8 +103,8 @@ export default async function PublicMenuPage() {
         </span>
       </section>
       <footer className="public-footer">
-        <Logo href="/" />
-        <p>Mexican kitchen, bar, and culture in Fort Worth.</p>
+        <Logo href="/events" />
+        <p>Official menu from Oasis Mexican Kitchen &amp; Bar.</p>
       </footer>
     </main>
   );
