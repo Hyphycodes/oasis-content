@@ -334,6 +334,52 @@ export async function getLocations() {
   }));
 }
 
+export type BusinessSettings = {
+  name: string;
+  phone: string;
+  website: string;
+  timezone: string;
+};
+
+const defaultBusinessSettings: BusinessSettings = {
+  name: "Oasis Mexican Kitchen & Bar",
+  phone: "",
+  website: "",
+  timezone: "America/Chicago",
+};
+
+export async function getBusinessSettings(): Promise<BusinessSettings> {
+  const supabase = await createSupabaseServerClient();
+  if (!supabase) return defaultBusinessSettings;
+  const { data, error } = await supabase
+    .from("site_content")
+    .select("body")
+    .like("key", "settings:business:%")
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  if (error) throw new Error("Oasis could not load business settings.");
+  if (!data?.body) return defaultBusinessSettings;
+
+  try {
+    const saved = JSON.parse(data.body) as Partial<BusinessSettings>;
+    return {
+      name:
+        typeof saved.name === "string"
+          ? saved.name
+          : defaultBusinessSettings.name,
+      phone: typeof saved.phone === "string" ? saved.phone : "",
+      website: typeof saved.website === "string" ? saved.website : "",
+      timezone:
+        typeof saved.timezone === "string"
+          ? saved.timezone
+          : defaultBusinessSettings.timezone,
+    };
+  } catch {
+    return defaultBusinessSettings;
+  }
+}
+
 export async function getContentItems() {
   const supabase = await createSupabaseServerClient();
   if (!supabase) return contentItems;
