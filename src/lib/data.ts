@@ -658,8 +658,8 @@ export async function getPromoters(): Promise<Promoter[]> {
       },
       {
         id: "promoter-sofia",
-        name: "Sofia Ramos",
-        handle: "@sofiatexas",
+        name: "Preview Promoter Two",
+        handle: "@preview_promoter_two",
         clicks: 204,
         orders: 28,
         revenue: 812,
@@ -708,7 +708,8 @@ export async function getPromoters(): Promise<Promoter[]> {
 
 export async function getCurrentProfile() {
   const supabase = await createSupabaseServerClient();
-  if (!supabase) return { name: "Alex Martinez", role: "Manager" };
+  if (!supabase)
+    return { name: "Preview Manager", role: "Development preview" };
   const { data: userData } = await supabase.auth.getUser();
   if (!userData.user) return { name: "Oasis Team", role: "Staff" };
   const [{ data: profile }, { data: memberships }] = await Promise.all([
@@ -746,22 +747,22 @@ export async function getTeamMembers() {
     return [
       {
         id: "preview-manager",
-        name: "Alex Martinez",
-        email: "alex@oasiskitchen.com",
+        name: "Preview Manager",
+        email: "manager@example.com",
         role: "manager" as const,
         status: "Active",
       },
       {
         id: "preview-staff",
-        name: "Maria Torres",
-        email: "maria@oasiskitchen.com",
+        name: "Preview Staff",
+        email: "staff@example.com",
         role: "staff" as const,
         status: "Active",
       },
       {
         id: "preview-door",
-        name: "Door iPhone",
-        email: "door@oasiskitchen.com",
+        name: "Preview Door Device",
+        email: "door@example.com",
         role: "door" as const,
         status: "Active",
       },
@@ -1095,9 +1096,9 @@ export async function getSiteCopy() {
     privateEvents:
       content("private_events")?.body ??
       "Bring your celebration to Oasis. We’ll help shape the menu, music, and room around your people.",
-    phone: visitor?.title ?? "(817) 555-0148",
-    address: visitor?.body ?? "Fort Worth, Texas",
-    hours: visitorMetadata?.hours ?? "Tue–Sun · 11am–2am",
-    reservationUrl: visitorMetadata?.reservationUrl ?? "tel:+18175550148",
+    phone: visitor?.title ?? "",
+    address: visitor?.body ?? "",
+    hours: visitorMetadata?.hours ?? "",
+    reservationUrl: visitorMetadata?.reservationUrl ?? "",
   };
 }
