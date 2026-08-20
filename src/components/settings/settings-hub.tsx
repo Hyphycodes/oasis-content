@@ -38,6 +38,18 @@ type Integration = {
   description: string;
   connected: boolean;
 };
+type BusinessSettings = {
+  name: string;
+  phone: string;
+  website: string;
+  timezone: string;
+};
+const defaultBusinessSettings: BusinessSettings = {
+  name: "Oasis Mexican Kitchen & Bar",
+  phone: "",
+  website: "",
+  timezone: "America/Chicago",
+};
 const tabs = [
   { key: "business", label: "Business", icon: Building2 },
   { key: "locations", label: "Locations", icon: MapPin },
@@ -62,20 +74,17 @@ export function SettingsHub({
   integrations,
   locations,
   team,
+  initialBusiness = defaultBusinessSettings,
 }: {
   integrations: Integration[];
   locations: SettingsLocation[];
   team: TeamMember[];
+  initialBusiness?: BusinessSettings;
 }) {
   const [active, setActive] = useState("business");
   const [saving, setSaving] = useState(false);
   const [notice, setNotice] = useState("");
-  const [business, setBusiness] = useState({
-    name: "Oasis Mexican Kitchen & Bar",
-    phone: "(817) 555-0148",
-    website: "",
-    timezone: "America/Chicago",
-  });
+  const [business, setBusiness] = useState(initialBusiness);
   const [destinations, setDestinations] = useState([
     "Website",
     "Tickets",
@@ -267,10 +276,11 @@ export function SettingsHub({
           <div className="settings-section">
             <header>
               <span className="kicker">Integrations</span>
-              <h2>Connected, without the clutter</h2>
+              <h2>Connection readiness</h2>
               <p>
-                Credentials stay server-side. Staff only sees whether a service
-                is ready.
+                Credentials stay server-side. Configured means the required
+                settings are present; live provider activity still needs a
+                test.
               </p>
             </header>
             <div className="integration-grid">
@@ -291,7 +301,7 @@ export function SettingsHub({
                       {connected ? (
                         <>
                           <Check />
-                          Connected
+                          Configured
                         </>
                       ) : (
                         <>
@@ -305,12 +315,12 @@ export function SettingsHub({
                       onClick={() =>
                         setNotice(
                           connected
-                            ? `${name} is managed with server-side credentials. Update the deployment secret to reconnect it.`
-                            : `${name} needs server-side credentials in the deployment environment before it can connect.`,
+                            ? `${name} configuration is present. Verify it with a provider test account before relying on live activity.`
+                            : `${name} needs server-side credentials in the deployment environment before it can be tested.`,
                         )
                       }
                     >
-                      {connected ? "Manage" : "Connect"}
+                      Setup details
                       <ExternalLink />
                     </button>
                   </article>
@@ -330,7 +340,7 @@ export function SettingsHub({
                 <dl>
                   <div>
                     <dt>Last publishing run</dt>
-                    <dd>Preview workflow · no live request</dd>
+                    <dd>No live provider run verified on this screen</dd>
                   </div>
                   <div>
                     <dt>Stripe webhook</dt>
@@ -343,7 +353,7 @@ export function SettingsHub({
                   </div>
                   <div>
                     <dt>Workflow runtime</dt>
-                    <dd>Configured · durable steps enabled</dd>
+                    <dd>Included in the build · verify after deployment</dd>
                   </div>
                 </dl>
                 <button
