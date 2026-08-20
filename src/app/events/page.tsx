@@ -15,6 +15,9 @@ export const dynamic = "force-dynamic";
 
 export default async function PublicEventsPage() {
   const events = await getPublishedEvents();
+  const locationNames = [
+    ...new Set(events.map((event) => event.locationName).filter(Boolean)),
+  ];
   return (
     <main className="public-site">
       <PublicHeader />
@@ -95,12 +98,15 @@ export default async function PublicEventsPage() {
         )}
       </section>
       <footer className="public-footer" id="visit">
-        <Logo href="/" />
-        <p>Mexican kitchen, bar, and culture in Fort Worth.</p>
-        <div>
-          <span>Oasis Downtown</span>
-          <span>Oasis Southside</span>
-        </div>
+        <Logo href="/events" />
+        <p>Official events from Oasis Mexican Kitchen &amp; Bar.</p>
+        {locationNames.length ? (
+          <div>
+            {locationNames.map((location) => (
+              <span key={location}>{location}</span>
+            ))}
+          </div>
+        ) : null}
       </footer>
     </main>
   );
