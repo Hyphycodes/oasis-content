@@ -1,23 +1,25 @@
 import type { ContentItem, Customer, Guest, OasisEvent } from "@/lib/types";
 
+// Development-only fixtures. Keep venue details obviously synthetic so a
+// credential-free preview can never be mistaken for a real Oasis location.
 export const locations = [
   {
     id: "loc-downtown",
-    name: "Oasis Downtown",
-    shortName: "Downtown",
-    address: "308 N Main Street, Fort Worth, TX",
-    phone: "(817) 555-0148",
+    name: "Oasis Preview — Main Room",
+    shortName: "Preview — Main Room",
+    address: "Development preview — not a real location",
+    phone: "",
     timezone: "America/Chicago",
-    hours: "Tue–Sun · 11am–2am",
+    hours: "Preview data only",
   },
   {
     id: "loc-southside",
-    name: "Oasis Southside",
-    shortName: "Southside",
-    address: "1212 W Magnolia Avenue, Fort Worth, TX",
-    phone: "(817) 555-0182",
+    name: "Oasis Preview — Patio",
+    shortName: "Preview — Patio",
+    address: "Development preview — not a real location",
+    phone: "",
     timezone: "America/Chicago",
-    hours: "Thu–Sun · 4pm–2am",
+    hours: "Preview data only",
   },
 ];
 
@@ -35,8 +37,8 @@ export const events: OasisEvent[] = [
     startsAt: "9:00 PM",
     endsAt: "1:30 AM",
     locationId: "loc-downtown",
-    locationName: "Oasis Downtown",
-    address: "308 N Main Street, Fort Worth, TX",
+    locationName: "Oasis Preview — Main Room",
+    address: "Development preview — not a real location",
     price: 18,
     capacity: 220,
     sold: 174,
@@ -71,8 +73,8 @@ export const events: OasisEvent[] = [
     startsAt: "11:00 AM",
     endsAt: "4:00 PM",
     locationId: "loc-southside",
-    locationName: "Oasis Southside",
-    address: "1212 W Magnolia Avenue, Fort Worth, TX",
+    locationName: "Oasis Preview — Patio",
+    address: "Development preview — not a real location",
     price: 0,
     capacity: 110,
     sold: 64,
@@ -106,8 +108,8 @@ export const events: OasisEvent[] = [
     startsAt: "9:00 PM",
     endsAt: "12:30 AM",
     locationId: "loc-downtown",
-    locationName: "Oasis Downtown",
-    address: "308 N Main Street, Fort Worth, TX",
+    locationName: "Oasis Preview — Main Room",
+    address: "Development preview — not a real location",
     price: 25,
     capacity: 250,
     sold: 212,
@@ -141,8 +143,8 @@ export const events: OasisEvent[] = [
     startsAt: "6:30 PM",
     endsAt: "9:00 PM",
     locationId: "loc-southside",
-    locationName: "Oasis Southside",
-    address: "1212 W Magnolia Avenue, Fort Worth, TX",
+    locationName: "Oasis Preview — Patio",
+    address: "Development preview — not a real location",
     price: 38,
     capacity: 42,
     sold: 21,
@@ -205,10 +207,10 @@ export const contentItems: ContentItem[] = [
 ];
 
 export const customers: Customer[] = [
-  { id: "cus-1", name: "Marisol Vega", email: "marisol@example.com", phone: "(817) 555-0131", visits: 9, spend: 486, lastSeen: "Aug 9", source: "Instagram", tags: ["Live music", "VIP"] },
-  { id: "cus-2", name: "Daniel Ruiz", email: "daniel@example.com", phone: "(682) 555-0194", visits: 6, spend: 272, lastSeen: "Aug 16", source: "Oasis Links", tags: ["Brunch"] },
-  { id: "cus-3", name: "Ana & Luis Torres", email: "torres@example.com", phone: "(817) 555-0157", visits: 12, spend: 804, lastSeen: "Aug 15", source: "Friend", tags: ["Regular", "Banda"] },
-  { id: "cus-4", name: "Camila Flores", email: "camila@example.com", phone: "(214) 555-0112", visits: 3, spend: 164, lastSeen: "Jul 28", source: "Google", tags: ["Paint & Sip"] },
+  { id: "cus-1", name: "Marisol Vega", email: "marisol@example.com", phone: "", visits: 9, spend: 486, lastSeen: "Aug 9", source: "Instagram", tags: ["Live music", "VIP"] },
+  { id: "cus-2", name: "Daniel Ruiz", email: "daniel@example.com", phone: "", visits: 6, spend: 272, lastSeen: "Aug 16", source: "Oasis Links", tags: ["Brunch"] },
+  { id: "cus-3", name: "Ana & Luis Torres", email: "torres@example.com", phone: "", visits: 12, spend: 804, lastSeen: "Aug 15", source: "Friend", tags: ["Regular", "Banda"] },
+  { id: "cus-4", name: "Camila Flores", email: "camila@example.com", phone: "", visits: 3, spend: 164, lastSeen: "Jul 28", source: "Google", tags: ["Paint & Sip"] },
 ];
 
 export const guests: Guest[] = [
