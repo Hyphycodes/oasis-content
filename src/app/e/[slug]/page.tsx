@@ -8,14 +8,16 @@ import { PublicHeader } from "@/components/public-header";
 import { ShareButton } from "@/components/share-button";
 import { TrackView } from "@/components/analytics/track-view";
 import { WaitlistForm } from "@/components/tickets/waitlist-form";
-import { getEventById, getPublishedEvents } from "@/lib/data";
+import { getPublishedEvents } from "@/lib/data";
 import { formatEventDate } from "@/lib/demo-data";
 
 type Props = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const event = await getEventById(slug);
+  const event = (await getPublishedEvents()).find(
+    (item) => item.slug === slug || item.id === slug,
+  );
   if (!event) return { title: "Event not found" };
   return {
     title: event.title,
@@ -30,9 +32,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function PublicEventPage({ params }: Props) {
   const { slug } = await params;
-  const event = await getEventById(slug);
+  const publishedEvents = await getPublishedEvents();
+  const event = publishedEvents.find(
+    (item) => item.slug === slug || item.id === slug,
+  );
   if (!event) notFound();
-  const related = (await getPublishedEvents())
+  const related = publishedEvents
     .filter((item) => item.id !== event.id)
     .slice(0, 2);
   const soldOut =
@@ -188,8 +193,8 @@ export default async function PublicEventPage({ params }: Props) {
         </div>
       </section>
       <footer className="public-footer">
-        <Logo href="/" />
-        <p>Mexican kitchen, bar, and culture in Fort Worth.</p>
+        <Logo href="/events" />
+        <p>Official events from Oasis Mexican Kitchen &amp; Bar.</p>
       </footer>
     </main>
   );
