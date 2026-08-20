@@ -19,6 +19,24 @@ const integrationGroups = {
 
 const localAppUrl = "http://localhost:3000";
 
+export type WorkspaceMode =
+  | "connected"
+  | "preview"
+  | "configuration_required";
+
+export function isPreviewWorkspaceEnabled() {
+  return process.env.NODE_ENV !== "production";
+}
+
+export function getWorkspaceMode(): WorkspaceMode {
+  const hasDatabase = Boolean(
+    process.env.NEXT_PUBLIC_SUPABASE_URL &&
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+  );
+  if (hasDatabase) return "connected";
+  return isPreviewWorkspaceEnabled() ? "preview" : "configuration_required";
+}
+
 export function getPublicAppUrl(fallback = localAppUrl) {
   const configuredUrl = process.env.NEXT_PUBLIC_APP_URL?.trim();
   if (!configuredUrl) return fallback;
