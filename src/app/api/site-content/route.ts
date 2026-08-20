@@ -2,21 +2,24 @@ import { z } from "zod";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 const inputSchema = z.object({
-  hero: z.string().trim().min(2).max(160),
-  subtitle: z.string().trim().min(2).max(400),
+  hero: z.string().trim().max(160),
+  subtitle: z.string().trim().max(400),
   heroImage: z
     .string()
     .trim()
     .max(2048)
-    .regex(/^(https?:\/\/|\/)/, "Choose a valid image URL."),
-  primaryCta: z.string().trim().min(2).max(60),
-  secondaryCta: z.string().trim().min(2).max(60),
-  eventsHeading: z.string().trim().min(2).max(160),
+    .refine(
+      (value) => !value || /^(https?:\/\/|\/)/.test(value),
+      "Choose a valid image URL.",
+    ),
+  primaryCta: z.string().trim().max(60),
+  secondaryCta: z.string().trim().max(60),
+  eventsHeading: z.string().trim().max(160),
   banner: z.string().trim().max(200),
   privateEvents: z.string().trim().max(1000),
-  phone: z.string().trim().min(3).max(30),
-  address: z.string().trim().min(3).max(300),
-  hours: z.string().trim().min(3).max(200),
+  phone: z.string().trim().max(30),
+  address: z.string().trim().max(300),
+  hours: z.string().trim().max(200),
   reservationUrl: z
     .string()
     .trim()
@@ -35,6 +38,27 @@ export async function POST(request: Request) {
       { error: "Review the website copy and try again." },
       { status: 400 },
     );
+  if (parsed.data.publish) {
+    const requiredValues = [
+      parsed.data.hero,
+      parsed.data.subtitle,
+      parsed.data.heroImage,
+      parsed.data.primaryCta,
+      parsed.data.secondaryCta,
+      parsed.data.eventsHeading,
+      parsed.data.phone,
+      parsed.data.address,
+      parsed.data.hours,
+    ];
+    if (requiredValues.some((value) => !value))
+      return Response.json(
+        {
+          error:
+            "Complete the homepage, event heading, and visitor details before publishing. You can save an incomplete draft anytime.",
+        },
+        { status: 400 },
+      );
+  }
   const supabase = await createSupabaseServerClient();
   if (!supabase)
     return Response.json({
