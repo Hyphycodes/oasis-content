@@ -5,7 +5,7 @@ import { Logo } from "@/components/logo";
 export function PublicHeader() {
   return (
     <header className="public-header">
-      <Logo href="/" />
+      <Logo href="/events" />
       <nav>
         <Link href="/events">
           <CalendarDays />
@@ -15,10 +15,10 @@ export function PublicHeader() {
           <Camera />
           Menu
         </Link>
-        <a href="#visit">
+        <Link href="/go">
           <MapPin />
-          Visit
-        </a>
+          Visit &amp; links
+        </Link>
       </nav>
       <Link className="button public-reserve" href="/events">
         What’s on
