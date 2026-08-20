@@ -18,7 +18,6 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { events } from "@/lib/demo-data";
 
 type MenuItem = {
   id: string;
@@ -37,78 +36,6 @@ export type MenuSectionView = {
   description: string;
   items: MenuItem[];
 };
-const initialSections = [
-  {
-    id: "sec-share",
-    name: "Para Compartir",
-    description: "Made for the table",
-    items: [
-      {
-        id: "item-queso",
-        sectionId: "sec-share",
-        name: "Oasis Queso Fundido",
-        description: "Roasted poblano, chorizo, Oaxaca cheese, warm tortillas",
-        price: 15,
-        available: true,
-        featured: true,
-        dietaryTags: ["GF available"],
-        sortOrder: 0,
-      },
-      {
-        id: "item-guac",
-        sectionId: "sec-share",
-        name: "Tableside Guacamole",
-        description: "Avocado, lime, serrano, cilantro, warm tostadas",
-        price: 13,
-        available: true,
-        featured: false,
-        dietaryTags: ["Vegan", "GF"],
-        sortOrder: 1,
-      },
-      {
-        id: "item-elote",
-        sectionId: "sec-share",
-        name: "Charred Elote",
-        description: "Chile-lime crema, cotija, smoked chile",
-        price: 9,
-        available: true,
-        featured: false,
-        dietaryTags: ["Vegetarian", "GF"],
-        sortOrder: 2,
-      },
-    ],
-  },
-  {
-    id: "sec-tacos",
-    name: "Tacos & Platos",
-    description: "Corn tortillas made daily",
-    items: [
-      {
-        id: "item-birria",
-        sectionId: "sec-tacos",
-        name: "Birria Tacos",
-        description:
-          "Slow-braised beef, Oaxaca cheese, onion, cilantro, consommé",
-        price: 18,
-        available: true,
-        featured: true,
-        dietaryTags: [],
-        sortOrder: 0,
-      },
-      {
-        id: "item-cauliflower",
-        sectionId: "sec-tacos",
-        name: "Crispy Cauliflower Tacos",
-        description: "Adobo, avocado crema, cabbage, pickled onion",
-        price: 15,
-        available: true,
-        featured: false,
-        dietaryTags: ["Vegetarian"],
-        sortOrder: 1,
-      },
-    ],
-  },
-];
 
 type SiteCopy = {
   hero: string;
@@ -125,28 +52,26 @@ type SiteCopy = {
   reservationUrl: string;
 };
 
-const previewSiteCopy: SiteCopy = {
-  hero: "Good food. Good music. Good people.",
-  subtitle: "Mexican kitchen, bar, and culture—made for getting together.",
-  heroImage:
-    "https://images.unsplash.com/photo-1541544741938-0af808871cc0?auto=format&fit=crop&w=1800&q=88",
-  primaryCta: "See what’s on",
-  secondaryCta: "Explore the menu",
-  eventsHeading: "There’s always a reason to stay awhile.",
-  banner: "Selena Forever · Tickets on sale now",
-  privateEvents:
-    "Bring your celebration to Oasis. We’ll help shape the menu, music, and room around your people.",
-  phone: "(817) 555-0148",
-  address: "Fort Worth, Texas",
-  hours: "Tue–Sun · 11am–2am",
-  reservationUrl: "tel:+18175550148",
+const emptySiteCopy: SiteCopy = {
+  hero: "",
+  subtitle: "",
+  heroImage: "",
+  primaryCta: "",
+  secondaryCta: "",
+  eventsHeading: "",
+  banner: "",
+  privateEvents: "",
+  phone: "",
+  address: "",
+  hours: "",
+  reservationUrl: "",
 };
 
 export function MenuEditor({
-  initialMenuId = "preview-menu",
-  initialLocationName = "Oasis Downtown",
-  initialSections: suppliedSections = initialSections,
-  initialSiteCopy = previewSiteCopy,
+  initialMenuId = "",
+  initialLocationName = "Oasis",
+  initialSections: suppliedSections = [],
+  initialSiteCopy = emptySiteCopy,
 }: {
   initialMenuId?: string;
   initialLocationName?: string;
@@ -680,7 +605,7 @@ export function MenuEditor({
             </div>
             <div className="site-hero-preview">
               <Image
-                src={siteCopy.heroImage || events[1].imageUrl}
+                src={siteCopy.heroImage || "/event-placeholder.svg"}
                 alt="Oasis homepage preview"
                 fill
                 sizes="50vw"
