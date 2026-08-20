@@ -1,11 +1,5 @@
-insert into public.locations (id, name, slug, address, phone, timezone, operating_hours, is_active)
-values
-  ('00000000-0000-4000-8000-000000000001', 'Oasis Downtown', 'downtown', '308 N Main Street, Fort Worth, TX', '(817) 555-0148', 'America/Chicago', '{"tuesday":"11:00-02:00","wednesday":"11:00-02:00","thursday":"11:00-02:00","friday":"11:00-02:00","saturday":"11:00-02:00","sunday":"11:00-00:00"}', true),
-  ('00000000-0000-4000-8000-000000000002', 'Oasis Southside', 'southside', '1212 W Magnolia Avenue, Fort Worth, TX', '(817) 555-0182', 'America/Chicago', '{"thursday":"16:00-02:00","friday":"16:00-02:00","saturday":"11:00-02:00","sunday":"11:00-00:00"}', true)
-on conflict (id) do nothing;
-
 insert into public.locations (id, name, slug, address, timezone, operating_hours, is_active)
-values ('00000000-0000-4000-8000-000000000003', 'Oasis Lockport', 'lockport', 'Local development seed — replace with the verified Lockport address', 'America/Chicago', '{"friday":"16:00-02:00","saturday":"11:00-02:00","sunday":"11:00-22:00"}', true)
+values ('00000000-0000-4000-8000-000000000003', 'Oasis Development Preview', 'development-preview', 'Development-only venue — not a real Oasis address', 'America/Chicago', '{}', true)
 on conflict (id) do nothing;
 
 insert into public.event_templates (name, description, defaults)
@@ -40,7 +34,7 @@ values ('30000000-0000-4000-8000-000000000001', '10000000-0000-4000-8000-0000000
 on conflict (id) do nothing;
 
 insert into public.customers (id, email, phone, first_name, last_name, source, tags)
-values ('40000000-0000-4000-8000-000000000001', 'sample.customer@example.com', '(555) 010-0200', 'Sample', 'Customer', 'development_seed', array['development'])
+values ('40000000-0000-4000-8000-000000000001', 'sample.customer@example.com', null, 'Sample', 'Customer', 'development_seed', array['development'])
 on conflict (id) do nothing;
 
 insert into public.promoters (id, name, email, social_handle, notes, default_comp_limit, is_active)
