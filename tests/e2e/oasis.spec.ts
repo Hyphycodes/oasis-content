@@ -90,16 +90,15 @@ test("a manager can add a comp without leaving the guest list", async ({
   await expect(page.getByText("QA Promoter", { exact: true })).toBeVisible();
 });
 
-test("published website content has a public preview and a safe draft action", async ({
+test("the root opens Oasis Admin and website drafts stay preview-only", async ({
   page,
 }) => {
   await page.goto("/");
+  await expect(page).toHaveURL(/\/admin$/);
   await expect(
-    page.getByRole("heading", { name: "Good food. Good music. Good people." }),
+    page.getByRole("heading", { name: "Good afternoon, Preview." }),
   ).toBeVisible();
-  await expect(
-    page.getByRole("link", { name: /Explore the menu/ }),
-  ).toBeVisible();
+  await expect(page.getByText("Development preview only")).toBeVisible();
 
   await page.goto("/admin/menu");
   await page.getByRole("button", { name: "Website content" }).click();
