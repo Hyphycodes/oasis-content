@@ -60,7 +60,7 @@ export function LoginForm() {
 
   return (
     <form className="login-form" onSubmit={onSubmit}>
-      <label>Email<input type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="you@oasiskitchen.com" required autoComplete="email" /></label>
+      <label>Email<input type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="name@example.com" required autoComplete="email" /></label>
       <label>Password<input type="password" value={password} onChange={(event) => setPassword(event.target.value)} placeholder="Your password" required autoComplete="current-password" /></label>
       {error && <p className="form-error" role="alert">{error}</p>}
       {notice && <p className="form-notice" role="status">{notice}</p>}
