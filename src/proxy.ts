@@ -1,12 +1,32 @@
 import { createServerClient } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
+import { getWorkspaceMode } from "@/lib/env";
 
 export async function proxy(request: NextRequest) {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const mode = getWorkspaceMode();
+  const path = request.nextUrl.pathname;
 
-  // Without Supabase credentials, the app intentionally runs as a labeled preview workspace.
-  if (!url || !key) return NextResponse.next();
+  if (mode === "preview") return NextResponse.next();
+  if (mode === "configuration_required" || !url || !key) {
+    if (path.startsWith("/api/")) {
+      return Response.json(
+        {
+          error:
+            "Oasis Admin is not connected yet. An administrator needs to finish setup.",
+          mode: "configuration_required",
+        },
+        { status: 503 },
+      );
+    }
+    if (path === "/login") return NextResponse.next();
+    const loginUrl = request.nextUrl.clone();
+    loginUrl.pathname = "/login";
+    loginUrl.search = "";
+    loginUrl.searchParams.set("configuration", "required");
+    return NextResponse.redirect(loginUrl);
+  }
 
   let response = NextResponse.next({ request });
   const supabase = createServerClient(url, key, {
@@ -27,7 +47,6 @@ export async function proxy(request: NextRequest) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  const path = request.nextUrl.pathname;
   const publicApiPaths = [
     "/api/checkout",
     "/api/webhooks/stripe",
