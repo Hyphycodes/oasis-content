@@ -493,7 +493,7 @@ export function GuestManager({
                   type="tel"
                   value={phone}
                   onChange={(event) => setPhone(event.target.value)}
-                  placeholder="(817) 555-0100"
+                  placeholder="Phone number"
                 />
               </label>
             </div>
@@ -597,7 +597,7 @@ export function GuestManager({
                 type="tel"
                 value={promoterPhone}
                 onChange={(event) => setPromoterPhone(event.target.value)}
-                placeholder="(817) 555-0100"
+                placeholder="Phone number"
               />
             </label>
             <label className="field">
